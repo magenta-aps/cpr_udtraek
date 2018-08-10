@@ -52,9 +52,8 @@ if __name__ == '__main__':
 
     sftpclient.get_incident_files_from_server()
 
-    # NOTE: On remote server move downloaded files to another dir in case
-    # something goes wrong, and we therefore would need them.
-    # DO NOT STORE IN ./OUT ON SERVER. THE FOLDER IS FOR CPR UDTRAEK DEFINITION FILES !!! 
+    # NOTE: On remote server do not delete downloaded files, 
+    # because we might need them in case something goes wrong. 
     sftpclient.move_downloaded_files_on_server()
 
     sftpclient.close_connection()
