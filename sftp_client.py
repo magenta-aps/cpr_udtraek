@@ -79,22 +79,25 @@ class ServiceplatformenSFTPClient(object):
 
         return filenames
 
-    def move_downloaded_files_on_server(self):
-        """Uses the instance variable downloaded_files[] as reference to
-        respectively move processed files from /IN/ to /OUT/ on the
-        sftp server. The file references in self.downloaded_files are appended
-        during execution of get_incident_files_from_server().
-        :param downloaded_files: A list of file names.
-        :type downloaded_files: list
-        :return: void
-        :rtype: None"""
-
-        remote_files = self.downloaded_files
-        for current_filepath in remote_files:
-            filename = current_filepath[5:]
-            new_filepath = '/{target_dir}/{filename}'.format(
-                target_dir='OUT',
-                filename=filename
-            )
-            # print(new_filepath)
-            self.sftp_client.rename(current_filepath, new_filepath)
+#    We should not move downloaded files to a folder outside the current one.
+#    Perhaps we should not touch the already downloaded fiels at all!?
+#
+#    def move_downloaded_files_on_server(self):
+#        """Uses the instance variable downloaded_files[] as reference to
+#        respectively move processed files from /IN/ to /OUT/ on the
+#        sftp server. The file references in self.downloaded_files are appended
+#        during execution of get_incident_files_from_server().
+#        :param downloaded_files: A list of file names.
+#        :type downloaded_files: list
+#        :return: void
+#        :rtype: None"""
+#
+#        remote_files = self.downloaded_files
+#        for current_filepath in remote_files:
+#            filename = current_filepath[5:]
+#            new_filepath = '/{target_dir}/{filename}'.format(
+#                target_dir='OUT',
+#                filename=filename
+#            )
+#            # print(new_filepath)
+#            self.sftp_client.rename(current_filepath, new_filepath)
