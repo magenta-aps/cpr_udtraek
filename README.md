@@ -40,5 +40,3 @@ Output eksempel:
   },
 }
 ```
-
-Dette blev skrevet ifm. AVA-projektet, men er fortsat aldrig taget i brug.
