@@ -62,42 +62,21 @@ class ServiceplatformenSFTPClient(object):
         self.sftp_client.close()
         self.transport.close()
 
-    def get_incident_files_from_server(self):
+    def get_files(self, since_ymd):
         """Downloads all current incident files on serviceplatformen' sftp
         server, and stores them in locally defined local file storage path.
         :return: A list of the files downloaded.
         :rtype: list"""
 
-        filenames = self.sftp_client.listdir(self.remote_path)
+        remote_to_local = [
+            (os.path.join(self.remote_path, filename), os.path.join(self.localpath, filename))
+            for filename in self.sftp_client.listdir(self.remote_path) 
+            if filename[1:] > since_ymd
+            and not filename.endswith(".metadata")
+        ]
 
-        for filename in filenames:
+        for remote, local in remote_to_local:
+            self.sftp_client.get(remote, local)
 
-            remote_file_path = '{}{}'.format(self.remote_path, str(filename))
-            local_file_path = '{}/{}'.format(self.localpath, str(filename))
-            self.downloaded_files.append(remote_file_path)
-            self.sftp_client.get(remote_file_path, local_file_path)
+        return [local for remote,local in remote_to_local]
 
-        return filenames
-
-#    We should not move downloaded files to a folder outside the current one.
-#    Perhaps we should not touch the already downloaded fiels at all!?
-#
-#    def move_downloaded_files_on_server(self):
-#        """Uses the instance variable downloaded_files[] as reference to
-#        respectively move processed files from /IN/ to /OUT/ on the
-#        sftp server. The file references in self.downloaded_files are appended
-#        during execution of get_incident_files_from_server().
-#        :param downloaded_files: A list of file names.
-#        :type downloaded_files: list
-#        :return: void
-#        :rtype: None"""
-#
-#        remote_files = self.downloaded_files
-#        for current_filepath in remote_files:
-#            filename = current_filepath[5:]
-#            new_filepath = '/{target_dir}/{filename}'.format(
-#                target_dir='OUT',
-#                filename=filename
-#            )
-#            # print(new_filepath)
-#            self.sftp_client.rename(current_filepath, new_filepath)

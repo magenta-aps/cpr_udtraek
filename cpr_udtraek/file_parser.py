@@ -7,7 +7,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 #
 
-from records_parser import (
+from .records_parser import (
     parse_record_001,
     parse_record_003,
     parse_record_004,
@@ -15,32 +15,31 @@ from records_parser import (
     parse_record_012
 )
 
-from oio_client import (
-    get_citizen_by_uuid,
-    get_citizen_uuid_by_cpr,
-    update_citizen
-)
-
 import json
 import sys
+import os
+import datetime
+import logging
 
+logger = logging.getLogger("cpr_udtraek")
 
-def parse_incident_files(file_paths_dict):
+def parse_incident_files(files):
     """Description pending...
     :param file_path: Location of incident file(s)
     :type file_path: str
     :return: A list containing dictionaries parsed from incident files.
     :rtype: list"""
 
-    parsed_incident_files = []
-    for date, file_path in file_paths_dict.items():
-        result_dict = __parse_incident_file(date=date, file_path=file_path)
-        parsed_incident_files.append(result_dict)
+    citizen_changes_by_date = {}
+    for file_path in sorted(files):
+        # changes for a citizen is aggregated by date
+        date = os.path.basename(file_path)[1:7]
+        citizen_changes = citizen_changes_by_date.setdefault(date,{})
+        __parse_incident_file(citizen_changes, file_path=file_path)
+    return citizen_changes_by_date
 
-    return parsed_incident_files
 
-
-def __parse_incident_file(date, file_path):
+def __parse_incident_file(citizens, file_path):
     """Description pending...
     :param date: Time of incident file' creation
     :param file_path: Location of incident file
@@ -49,13 +48,12 @@ def __parse_incident_file(date, file_path):
     :return: Nested dictionary -> { cprnr: { k:v, k:v, .. } }
     :rtype: dict"""
 
+    logger.info("parsing %(file_path)s", locals())
+
     try:
+        cpr_file_fp = open(file_path, 'r', encoding='ISO-8859-1')
 
-        cpr_file = open(file_path, 'r', encoding='ISO-8859-1')
-
-        citizens = {}
-
-        for line in cpr_file:
+        for line in cpr_file_fp:
 
             # NOTE: Ignoring non-citizen records: 000, 910, 997, 999
             if (line[0:3] == '000' or
@@ -131,8 +129,6 @@ def __parse_incident_file(date, file_path):
                     civilstand = record_012_dict['CIVST']
                     citizens[cprnr].update({'civilstand': civilstand})
 
-        return citizens
-
     except Exception as e:
 
-        print(e)
+        logger.exception(e)
