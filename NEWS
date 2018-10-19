@@ -1,0 +1,5 @@
+Version 0.0.2
+
+    creating local directory is no longer the respåonsibility of this module
+    sftp-client connection errors will raise 
+
