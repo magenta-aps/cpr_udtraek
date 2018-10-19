@@ -13,10 +13,10 @@ def read(fname):
 
 setup(
     name="cpr_udtraek",
-    version="0.0.1",
+    version=read("VERSION").strip(),
     author="Heini Leander Ovason",
     author_email="heini@magenta-aps.dk",
-    description=("get andf parse files from the danish cpr registry"),
+    description=("get and parse files from the danish cpr registry"),
     license="MPL",
     keywords="cpr",
     url="",

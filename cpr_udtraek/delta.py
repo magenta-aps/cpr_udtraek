@@ -49,4 +49,7 @@ def delta(since_ymd="010101"):
     logger.info("end cpr_udtraek delta siden %(since_ymd)s", locals())
     return citizen_changes_by_date
 
-
+if __name__ == '__main__':
+    testit = False
+    if testit:
+        print(delta())

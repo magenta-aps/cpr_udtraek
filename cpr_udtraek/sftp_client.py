@@ -27,23 +27,15 @@ class ServiceplatformenSFTPClient(object):
         self.remote_path = settings.get('remote_path')
         self.localpath = settings.get('local_path')
 
-        try:
-            os.makedirs(self.localpath)
-        except OSError as e:
-            if e.errno != errno.EEXIST:
-                print(e)
-                raise
+        if not os.path.isdir(self.localpath):
+            raise NotADirectoryError(self.localpath)
 
-        try:
-            self.key = paramiko.RSAKey.from_private_key_file(
-                filename=settings.get('ssh_key_path'),
-                password=settings.get('ssh_key_passphrase')
-            )
-        except IOError as e:
-            print(e)
+        self.key = paramiko.RSAKey.from_private_key_file(
+            filename=settings.get('ssh_key_path'),
+            password=settings.get('ssh_key_passphrase')
+        )
 
         self.transport = paramiko.Transport((self.host, self.port))
-
         self.downloaded_files = []
 
     def open_connection(self):
