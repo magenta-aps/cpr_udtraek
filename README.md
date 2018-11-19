@@ -3,13 +3,23 @@
 
 a program could look like this
 
+    settings = {
+        'user': ID_RSA_USER,
+        'host': SFTP_SERVER, 
+        'port': SFTP_SERVER_PORT,
+        'remote_path': SFTP_SERVER_INIT_PATH,
+        'local_path': SFTP_DOWNLOAD_PATH,
+        'ssh_key_path': ID_RSA_SP_PATH,
+        'ssh_key_passphrase': ID_RSA_SP_PASSPHRASE
+    }
+
     from cpr_udtraek import delta
     import pprint
 
     import logging
     logging.basicConfig(level=logging.INFO)
 
-    citizen_changes_by_date = delta("180927")
+    citizen_changes_by_date = delta("180927", settings=settings)
 
     changedate = list(citizen_changes_by_date.keys())[0]
     print (changedate)
