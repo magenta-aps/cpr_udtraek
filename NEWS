@@ -1,5 +1,9 @@
+Version 0.1.0
+
+    need for local settings file removed, settings given through api
+
 Version 0.0.2
 
-    creating local directory is no longer the respåonsibility of this module
+    creating local directory is no longer the responsibility of this module
     sftp-client connection errors will raise 
 
