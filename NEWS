@@ -1,3 +1,7 @@
+Version 0.1.1
+
+    bug fix - SFTP_DOWNLOAD_PATH replaced with settings-value
+ 
 Version 0.1.0
 
     need for local settings file removed, settings given through api
