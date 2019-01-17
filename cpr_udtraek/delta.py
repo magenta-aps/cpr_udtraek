@@ -24,9 +24,9 @@ def delta(since_ymd="010101", settings={}):
     files = sftpclient.get_files(since_ymd=since_ymd)
     sftpclient.close_connection()
     citizen_changes_by_date = parse_incident_files(files)
-    filelist = [f for f in os.listdir(SFTP_DOWNLOAD_PATH)]
+    filelist = [f for f in os.listdir(settings["local_path"])]
     for f in filelist:
-        os.remove(os.path.join(SFTP_DOWNLOAD_PATH, f))
+        os.remove(os.path.join(settings["local_path"], f))
     logger.info("end cpr_udtraek delta siden %(since_ymd)s", locals())
     return citizen_changes_by_date
 
